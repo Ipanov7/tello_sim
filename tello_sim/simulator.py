@@ -1,12 +1,8 @@
 import json
 import time
-from matplotlib import pyplot as plt
-from matplotlib.ticker import FuncFormatter, MaxNLocator
+import plotext as plt
 import numpy as np
 import pandas as pd
-
-from easytello import Tello
-
 
 class Simulator():
     def __init__(self):
@@ -76,37 +72,23 @@ class Simulator():
 
     # Plotting functions
     def plot_altitude_steps(self):
-        fig, ax = plt.subplots()
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        ax.plot(self.altitude_data,'ro', linestyle='dashed', linewidth=2, markersize=12)
-        ax.plot(self.altitude_data, linewidth=25, alpha=.15)
-        ax.grid()
-        ax.set(xlabel='Step', ylabel='Altitude in Centimeters',title='Tello Altitude')
+        plt.clear_plot()
+        plt.plot(self.altitude_data, marker='ro')
+        plt.plot(self.altitude_data)
+        plt.title("Tello Altitude")
         plt.show()
 
     def plot_horz_steps(self):
         title = "Path of Tello from Takeoff Location. \nLast Heading= {} Degrees from Start".format(self.bearing)
-        fig, ax = plt.subplots()
+        plt.clear_plot()
         horz_df = pd.DataFrame(self.path_coors)
-        xlow = min(horz_df[0])
-        xhi = max(horz_df[0])
-        ylow = min(horz_df[1])
-        yhi = max(horz_df[1])
-        xlowlim = -200 if xlow > -200 else xlow - 40
-        xhilim = 200 if xhi < 200 else xhi + 40
-        ylowlim = -200 if ylow > -200 else ylow - 40
-        yhilim = 200 if yhi < 200 else yhi + 40
-        ax.set_xlim([xlowlim,xhilim])
-        ax.set_ylim([ylowlim,yhilim])
-        ax.plot(horz_df[0], horz_df[1], 'bo', linestyle='dashed', linewidth=2, markersize=12, label="Drone Moves")
-        ax.plot(horz_df[0], horz_df[1], linewidth=25, alpha=.15)
+
+        plt.plot(horz_df[0], horz_df[1], marker='bo', label="Drone Moves")
+        plt.plot(horz_df[0], horz_df[1])
         if len(self.flip_coors) > 0:
             flip_df = pd.DataFrame(self.flip_coors)
-            ax.plot(flip_df[0], flip_df[1], 'ro', markersize=12, label="Drone Flips")
-        ax.xaxis.set_major_locator(MaxNLocator(integer=True))
-        ax.grid()
-        ax.legend()
-        ax.set(xlabel='X Distance from Takeoff', ylabel='Y Distance from Takeoff',title=title)
+            plt.plot(flip_df[0], flip_df[1], marker='ro', label="Drone Flips")
+        plt.title("Y Distance from Takeoff")
         plt.show()
 
     # Determine bearing relative to start which is inline with positive y-axis
@@ -349,27 +331,6 @@ class Simulator():
         self.send_command('flip', direc)
         self.flip_coors.append(self.cur_loc)
         self.plot_horz_steps()
-
-    # Deploys the command log from the simulation state to the actual drone
-    def deploy(self):
-        """
-        Deploys commands built up for drone object to real drone via easyTello.
-        Note: computer must be connected to the drone's WiFi network.
-
-        Examples
-        ----------
-        drone.deploy() # deploy commands to drone
-
-        """
-        print('Deploying your commands to a real Tello drone!')
-
-        if (self.driver_instance is None):
-            # Since the driver binds to a socket on instantiation, we can only
-            # keep a single driver instance open per session
-            self.driver_instance = Tello()
-
-        for command in self.command_log:
-            self.driver_instance.send_command(self.serialize_command(command))
 
     # Resets the simulation state back to the beginning: no commands + landed
     def reset(self):
