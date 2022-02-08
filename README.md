@@ -1,5 +1,5 @@
 # about this fork
-This repo is a fork of [tello_sim](https://github.com/Fireline-Science/tello_sim) (kudos to [Fireline Science](https://github.com/Fireline-Science)) using plotext rather than matplotlip, in order to work with text-based environments.
+This repo is a fork of [tello_sim](https://github.com/Fireline-Science/tello_sim) (kudos to [Fireline Science](https://github.com/Fireline-Science)) using plotext rather than matplotlib, in order to work with text-based environments.
 
 # tello_sim
 
