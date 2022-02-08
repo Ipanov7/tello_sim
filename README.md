@@ -1,3 +1,6 @@
+# about this fork
+This repo is a fork of [tello_sim](https://github.com/Fireline-Science/tello_sim) (kudos to [Fireline Science](https://github.com/Fireline-Science)) using plotext rather than matplotlip, in order to work with text-based environments.
+
 # tello_sim
 
 **tello_sim** is a simple Python simulator (sim) that can be used by students to test their [tello](https://www.ryzerobotics.com/tello-edu) flight plans before deploying them to a real drone. It was inspired by the [easyTello](https://github.com/Virodroid/easyTello) library and uses it for the drone interface.
